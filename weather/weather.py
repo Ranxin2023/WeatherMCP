@@ -1,7 +1,7 @@
 from typing import Any
 import httpx
 from mcp.server.fastmcp import FastMCP
-
+from StateCodes import STATE_CODES
 # Initialize FastMCP server
 mcp = FastMCP("weather")
 
@@ -34,13 +34,17 @@ Description: {props.get('description', 'No description available')}
 Instructions: {props.get('instruction', 'No specific instructions provided')}
 """
 
+
+
 @mcp.tool()
 async def get_alerts(state: str) -> str:
-    """Get weather alerts for a US state.
+    """Get weather alerts for a US state (full name or 2-letter code)."""
+    state = state.strip().upper()
+    state = STATE_CODES.get(state, state)  # Convert full name to abbreviation if possible
 
-    Args:
-        state: Two-letter US state code (e.g. CA, NY)
-    """
+    if len(state) != 2:
+        return "Error: State code must be two letters (e.g., 'CA')."
+
     url = f"{NWS_API_BASE}/alerts/active/area/{state}"
     data = await make_nws_request(url)
 
@@ -48,7 +52,7 @@ async def get_alerts(state: str) -> str:
         return "Unable to fetch alerts or no alerts found."
 
     if not data["features"]:
-        return "No active alerts for this state."
+        return f"No active alerts for {state}."
 
     alerts = [format_alert(feature) for feature in data["features"]]
     return "\n---\n".join(alerts)
