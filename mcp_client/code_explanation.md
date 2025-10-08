@@ -33,4 +33,10 @@
     7. Feeds the tool result back into Claude (tool_result) so the model can continue reasoning.
     8. Appends any additional text or follow-up reasoning to `final_text`.
 
-    
+### `chat_loop(self)`
+- Interactive REPL-like loop for user interaction.
+    - Prints a startup message.
+    - Continuously asks for user queries.
+    - Sends each query to `process_query()`.
+    - Displays Claude’s full response (including tool usage and results).
+    - Type `'quit'` to exit.

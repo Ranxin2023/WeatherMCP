@@ -34,17 +34,39 @@ User Query  →  MCP Client  →  Claude Model (via Anthropic API)
 ```
 ## Project Structure
 ```graphql
-.
-├── client.py           # MCP client that connects to the weather server
-├── weather.py          # FastMCP weather server (defines get_alerts & get_forecast)
-├── .env                # Contains your Anthropic API key
-├── requirements.txt    # Python dependencies
-└── README.md           # Project documentation
+BASICMCP/
+│
+├── mcp_client/
+│   ├── .venv/                     # Virtual environment for MCP client
+│   ├── .env                       # Stores Anthropic API key
+│   ├── client.py                  # MCP client that connects to the weather server
+│   ├── list_models.py             # Lists available Anthropic models
+│   ├── code_explanation.md        # Explanation of the MCP client code
+│   ├── pyproject.toml             # Project dependencies for MCP client
+│   ├── uv.lock                    # uv dependency lock file
+│   └── README.md                  # Documentation for the MCP client
+│
+├── weather/
+│   ├── .venv/                     # Virtual environment for weather server
+│   ├── weather.py                 # FastMCP server defining get_alerts & get_forecast tools
+│   ├── StateCodes.py              # Contains state code mappings for NWS API
+│   ├── main.py                    # Entry point to run the weather MCP server
+│   ├── code_explanation.md        # Explanation of the weather server logic
+│   ├── pyproject.toml             # Project dependencies for weather server
+│   ├── uv.lock                    # uv dependency lock file
+│   └── README.md                  # Documentation for the weather module
+│
+└── README.md                      # Main project documentation
+
 
 ```
 ### Architecture Overview
-1. **`weather.py`** runs a FastMCP server that defines callable weather tools.
-2. **`client.py`** launches the MCP server and initializes an MCP session.
+1. `weather.py` (inside the weather folder)
+- Runs a **FastMCP server** that defines two callable tools:
+    - `get_alerts(state)` → Fetches current weather alerts for a US state.
+    - `get_forecast(latitude, longitude)` → Returns a short-term forecast for the given coordinates.
+2. `client.py` (inside the mcp_client folder)
+- Launches an **MCP client** that connects to the weather server, initializes an MCP session, and allows interaction through Anthropic’s Claude API.
 3. When you ask Claude a question, it can decide to **call a tool**.
 4. The result is sent back to Claude for reasoning and response generation.
 

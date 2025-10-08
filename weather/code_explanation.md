@@ -32,3 +32,16 @@ async def make_nws_request(url: str) -> dict[str, Any] | None:
 2. Uses an asynchronous HTTP client (`httpx.AsyncClient`) to make a GET request.
 3. If successful, returns `response.json()` (a dictionary).
 4. If any exception occurs (e.g., timeout, network error, invalid response), returns `None`.
+
+## 3. `format_alert(feature: dict)`
+```python
+def format_alert(feature: dict) -> str:
+    """Format an alert feature into a readable string."""
+```
+
+- **Purpose:**
+    - Handles all HTTP requests to the NWS API, including error handling and JSON parsing.
+- **How it works:**
+    - Defines request headers (user agent + accept type).
+    - Uses an asynchronous HTTP client (`httpx.AsyncClient`) to make a GET request.
+    - 
